@@ -1,16 +1,21 @@
-# Node
+# dependencies
 node_modules/
+client/node_modules/
+server/node_modules/
 
-# Environment variables
+# environment variables
 .env
+client/.env
+server/.env
 
-# Logs
-logs
-*.log
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Build
-dist
-build
+# build output
+client/build/
 
-# OS
-.DS_Store
+
+* text=auto eol=lf
+*.svg -text
