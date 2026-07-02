@@ -3,6 +3,7 @@ import {
   Eye, EyeOff, Mail, Lock, User, AtSign,
   ArrowRight, Sparkles, Zap, Globe, Camera, X,
 } from "lucide-react";
+import { apiCall, Register } from "../api/apiCall";
 
 /* ── Google icon ─────────────────────────────────────────── */
 const GoogleIcon = () => (
@@ -249,6 +250,9 @@ const LoginForm = ({ onSwitch }) => {
   };
 
   const handleSubmit = (e) => {
+console.log(email,password);
+
+
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) return setErrors(errs);
@@ -311,12 +315,17 @@ const SignupForm = ({ onSwitch }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   const handleAvatarFile = (file) => {
     if (!file || !file.type.startsWith("image/")) return;
-    const reader = new FileReader();
+ const photo = event.target.files[0];
+
+  const reader = new FileReader();
     reader.onload = (e) => setAvatar(e.target.result);
     reader.readAsDataURL(file);
+
+    setProfile(file)
   };
 
   const onDrop = (e) => {
@@ -362,16 +371,35 @@ const SignupForm = ({ onSwitch }) => {
     const errs = validate();
     if (Object.keys(errs).length) return setErrors(errs);
     setLoading(true);
-    setTimeout(() => {
-      console.log("📋 New Account Data:", {
+    const submittedData={
         fullName: form.fullName,
         username: form.username,
         email: form.email,
         password: form.password,
-        avatar: avatar ? "[image data present]" : null,
-      });
-      setForm({ fullName: "", username: "", email: "", password: "" });
-      setAvatar(null);
+        avatar: avatar ? profile : null,
+      }
+
+
+
+  const formData=new FormData();
+
+
+
+formData.append("fullName",submittedData.fullName)
+formData.append("username",submittedData.username)
+formData.append("email",submittedData.email);
+formData.append("password",submittedData.password)
+formData.append("profileImage",submittedData.avatar)
+
+
+
+Register(formData)
+// apiCall()
+
+    setTimeout(() => {
+      console.log("📋 New Account Data:", submittedData);
+      // setForm({ fullName: "", username: "", email: "", password: "" });
+      // setAvatar(null);
       setErrors({});
       setLoading(false);
     }, 1800);
@@ -439,7 +467,7 @@ const SignupForm = ({ onSwitch }) => {
               : "Click or drag · optional"}
           </p>
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
-            onChange={(e) => handleAvatarFile(e.target.files[0])} />
+            onChange={(e) => handleAvatarFile(e.target.files[0])}  name="profileImage"/>
         </div>
 
         {/* Name + Username — stack on mobile, side-by-side on sm+ */}

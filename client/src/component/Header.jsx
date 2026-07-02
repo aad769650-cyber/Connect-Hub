@@ -16,8 +16,9 @@ import {
   X,
   Share2,
 } from "lucide-react";
-import { NavLink } from "react-router";
+import { createPath, NavLink } from "react-router";
 import { toast } from "sonner";
+import { apiCall } from "../api/apiCall";
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState("");
@@ -32,6 +33,13 @@ export default function Header() {
 
   const dropdownRef = useRef(null);
 
+    const handleClick=async()=>{
+toast.success("Created") 
+
+
+apiCall()
+
+    }
   // Close the profile dropdown when clicking outside of it
   useEffect(() => {
     function handleClickOutside(event) {
@@ -73,8 +81,8 @@ export default function Header() {
   };
 
   const navItems = [
-    { id: "home", label: "Home", icon: Home },
-    { id: "explore", label: "Explore", icon: Compass },
+    { id: "home", label: "Home", icon: Home,link:"/" },
+    { id: "explore", label: "Explore", icon: Compass,link:"/explore" },
   ];
 
   function Badge({ count }) {
@@ -134,7 +142,7 @@ export default function Header() {
               type="button"
               onClick={() => setMobileSearchOpen(false)}
               aria-label="Close search"
-              className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${t.iconIdle} ${t.hover}`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${t.iconIdle} ${t.hover}`}
             >
               <X size={20} />
             </button>
@@ -148,7 +156,7 @@ export default function Header() {
               aria-label="SocialHub home"
             >
              
-              <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-lg font-bold tracking-tight text-transparent sm:text-xl">
+              <span className="bg-linear-to-r from-indigo-600 to-blue-600 bg-clip-text text-lg font-bold tracking-tight text-transparent sm:text-xl">
                <img src="/logo.svg" alt="Logo" /> 
               </span>
             </a>
@@ -184,21 +192,24 @@ export default function Header() {
 
 <NavLink
   to="/login"
-  className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-sm font-semibold tracking-wide transition-all duration-300  hover:scale-105 active:scale-95 hover:shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+  className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-indigo-500 to-violet-600 text-white text-sm font-semibold tracking-wide transition-all duration-300  hover:scale-105 active:scale-95 hover:shadow-[0_0_20px_rgba(99,102,241,0.5)]"
 >
   Log In
 </NavLink>
 
               {/* Nav icons — desktop only */}
-              <div className="hidden items-center gap-1 sm:flex">
+              <div className="hidden items-center gap-1 sm:flex ">
                 {navItems.map((item) => (
-                  <IconButton
+               <NavLink to={item.link} className={"cursor-pointer"}> 
+                  <IconButton  
+                  
                     key={item.id}
                     icon={item.icon}
                     label={item.label}
                     active={activeNav === item.id}
                     onClick={() => setActiveNav(item.id)}
-                  />
+                    
+                  /></NavLink>
                 ))}
               </div>
 
@@ -206,13 +217,18 @@ export default function Header() {
               <IconButton icon={MessageCircle} label="Messages" badge={messageCount} />
 
               {/* Create post — desktop / tablet */}
+              <NavLink to="/createPost">
               <button
                 type="button"
-                className="ml-1 hidden items-center gap-1.5 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 sm:flex"
+
+                className="ml-1 cursor-pointer hidden items-center gap-1.5 rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-150 hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 sm:flex"
               >
                 <Plus size={18} strokeWidth={2.25} />
                 <span className="hidden md:inline">Create</span>
               </button>
+              
+              
+              </NavLink>
 
               {/* Profile dropdown */}
               <div className="relative ml-1" ref={dropdownRef}>
